@@ -7,7 +7,6 @@ module.exports.getUserByUsername = username => {
   return new Promise((res, rej) => {
     db.connect()
       .then(obj => {
-        db.many();
         obj
           .one(sql.getUser, [username])
           .then(data => {

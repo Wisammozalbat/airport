@@ -6,7 +6,9 @@ let queries = {
   }),
   newUser: new PS({
     name: "new-user",
-    text: "INSERT INTO USERS (USERNAME, PASSWORD) VALUES ($1, $2)"
+    text:
+      "INSERT INTO USERS (USERNAME, TYPE_USER_ID, PASSWORD) VALUES ($1, $2, $3)"
+    // INSERT INTO CLIENT (NAME, LASTNAME, BIRTHDAY, PASSPORT) VALUES ($4, $5, $6, $7)
   }),
   getFlights: new PS({
     name: "get-flights",

@@ -20,7 +20,11 @@ module.exports.newFlight = async (
     ]);
     return { status: 201, msg: "created", data };
   } catch (e) {
-    return { error: e, status: 403, msg: "forbidden fuck u" };
+    return {
+      error: e,
+      status: 503,
+      msg: "Failed at connecting to the data base"
+    };
   }
 };
 
@@ -43,22 +47,23 @@ module.exports.updateFlight = async (
     ]);
     return { status: 201, msg: "created", data };
   } catch (e) {
-    return { error: e, status: 403, msg: "forbidden fuck u" };
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
   }
 };
 
-module.exports.newTicket = async (
-  name,
-  lastname,
-  birthday,
-  passportID,
-  userId,
-  flightId
-) => {
+module.exports.newTicket = async (userId, flightId) => {
   try {
-    const data = await db.none(query.newTIcket, [flightId, userId]);
+    const data = await db.none(query.newTicket, [flightId, userId]);
     return { status: 201, msg: "created", data };
   } catch (e) {
-    return { error: e, status: 403, msg: "forbidden fuck u" };
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
   }
 };

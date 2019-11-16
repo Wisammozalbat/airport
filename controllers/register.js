@@ -15,7 +15,7 @@ router.post("/signup", (req, res) => {
       User.registerUser(
         req.body.username,
         bcrypt.hashSync(req.body.password, 10),
-        2
+        req.body.type_user_id
       )
         .then(data => {
           res.send(data);

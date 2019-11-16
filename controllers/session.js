@@ -7,6 +7,7 @@ const config = require("./../helpers/config");
 
 router.post("/login", function(req, res, next) {
   passport.authenticate("local", { session: false }, function(err, user, info) {
+    console.log(user);
     if (err) {
       return next(err);
     }
