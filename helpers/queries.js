@@ -21,6 +21,10 @@ let queries = {
   getFlight: new PS({
     name: "get-flight",
     text: "SELECT * FROM FLIGHT WHERE ID_FLIGHT=$1"
+  }),
+  updateFlight: new PS({
+    name: "update-flight",
+    text: ""
   })
 };
 
