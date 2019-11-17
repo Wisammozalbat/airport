@@ -8,7 +8,6 @@ let queries = {
     name: "new-user",
     text:
       "INSERT INTO USERS (USERNAME, TYPE_USER_ID, PASSWORD) VALUES ($1, $2, $3)"
-    // INSERT INTO CLIENT (NAME, LASTNAME, BIRTHDAY, PASSPORT) VALUES ($4, $5, $6, $7)
   }),
   getFlights: new PS({
     name: "get-flights",
@@ -26,7 +25,7 @@ let queries = {
   updateFlight: new PS({
     name: "update-flight",
     text:
-      "UPDATE FLIGHT SET DEP_GATE = $1 DAY = $2 DEPARTURE_TIME = $3 ARRIVAL_TIME = $4 ID_AIRPORT_DEPARTURE = $5 ID_AIRPORT_ARRIVAL = $6 WHERE [ID_FLIGHT = $7]"
+      "UPDATE FLIGHT SET DEP_GATE = $1, DAY = $2, DEPARTURE_TIME = $3, ARRIVAL_TIME = $4, ID_AIRPORT_DEPARTURE = $5, ID_AIRPORT_ARRIVAL = $6 WHERE [ID_FLIGHT = $7]"
   }),
   deleteFlight: new PS({
     name: "delete-flight",
@@ -34,11 +33,20 @@ let queries = {
   }),
   getTicket: new PS({
     name: "get-ticket",
-    text: "SELECT * FROM TICKET WHERE ID_USER = $1 ID-FLIGHT = $2"
+    text: "SELECT * FROM TICKET WHERE ID_FLIGHT = $1 AND ID_CLIENT = $2"
   }),
   newTicket: new PS({
     name: "new-ticket",
-    text: "INSERT INTO USERS (ID_FLIGHT, ID_USER) VALUES ($1, $2)"
+    text: "INSERT INTO TICKET (ID_FLIGHT, ID_CLIENT) VALUES ($1, $2)"
+  }),
+  getClient: new PS({
+    name: "get-client",
+    text: "SELECT * FROM CLIENT WHERE ID_USER = $1"
+  }),
+  newClient: new PS({
+    name: "new-client",
+    text:
+      "INSERT INTO CLIENT (NAME, LASTNAME, BIRTHDAY, PASSWORD, ID_USER) VALUES ($1, $2, $3, $4, $5)"
   })
 };
 

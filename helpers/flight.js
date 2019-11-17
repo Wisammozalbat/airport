@@ -54,16 +54,3 @@ module.exports.updateFlight = async (
     };
   }
 };
-
-module.exports.newTicket = async (userId, flightId) => {
-  try {
-    const data = await db.none(query.newTicket, [flightId, userId]);
-    return { status: 201, msg: "created", data };
-  } catch (e) {
-    return {
-      error: e,
-      status: 501,
-      msg: "Failed at connecting to the data base"
-    };
-  }
-};

@@ -2,8 +2,11 @@ const express = require("express");
 const auth = require("./../middlewares/jwtAuth");
 let router = express.Router();
 const db = require("./../helpers/db.js");
-const query = require("./../helpers/queries").default;
+const query = require("./../helpers/queries");
 const Flight = require("./../helpers/flight");
+const Ticket = require("./../helpers/ticket");
+const Client = require("./../helpers/client");
+
 
 router.get("/", async (req, res) => {
   try {
@@ -107,33 +110,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id/reserve", auth, (req, res) => {
-  res.send("Aqui es donde se mostraran los tickets del vuelo reservado");
-});
-
-router.post("/:id/reserve", auth, async (req, res) => {
+router.post("/:flightId/reserve", auth, async (req, res) => {
+  const { clientId } = req.body;
+  const { flightId } = req.params;
   try {
-    const data = await db.oneOrNone(query.getTicket, [
-      req.user.id_user,
-      req.params.id
-    ]);
+    const data = await Ticket.getTicket(flightId, clientId);
     if (data !== null) {
       res
         .status(409)
-        .json({ message: "El usuario ya posee pasaje para este vuelo" });
+        .json({ message: "Este cliente ya posee pasaje para este vuelo" });
       return;
     }
     if (req.user.type_user_id !== 3) {
-      const { name, lastname, birthday, passportID } = req.body;
-      const { id } = req.params;
-      const data = await Flight.newTicket(
-        name,
-        lastname,
-        birthday,
-        passportID,
-        req.user.id_user,
-        id
-      );
+      const data = await Ticket.newTicket(flightId, clientId);
       res.status(201).send({ ...data });
     } else {
       res.status(401).json({
@@ -145,5 +134,33 @@ router.post("/:id/reserve", auth, async (req, res) => {
     res.status(403).send({ ...e });
   }
 });
+
+router.get("/:flightId/:userId", auth, (req, res) => {
+  const { flightId, userId } = req.params;
+  try {
+    let clients = await Client.getClients(userId);
+    let tickets = [];
+    for(let i of clients){
+      const clientId = i.id_user;
+      let ticket = await Ticket.getTicket(flightId, clientId);
+      tickets.push(ticket.data);
+    }
+    tickets = tickets.sort(compare);
+    res.status(200).json({ data: tickets });
+  } catch (e) {
+    res.status(403).send({ ...e });
+  }
+  res.send();
+});
+
+function compare(a,b){
+  if(a.id_flight < b.id_flight){
+    return -1;
+  }
+  if(a.id_flight > b.id_flight){
+    return 1;
+  }
+  return 0;
+}
 
 module.exports = router;
