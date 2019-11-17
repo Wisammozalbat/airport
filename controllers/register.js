@@ -5,6 +5,49 @@ const User = require("./../helpers/users");
 const db = require("./../helpers/db");
 const query = require("./../helpers/queries");
 
+router.post("/signupAirline", auth, async (req, res) => {
+  if (req.user.type_user_id !== 1) {
+    const { airlineName, country, username, password } = req.body;
+    const type_user_id = 3;
+    try {
+      const data = await db.oneOrNone(query.getUser, [username]);
+      if (data !== null) {
+        res.status(503).json({ message: "usuario ya existe" });
+        return;
+      }
+      const airlineData = await db.oneOrNone(query.getAirline, [airlineName]);
+      if (airlineData !== null) {
+        res.status(503).json({ message: "aerolinea ya existe" });
+        return;
+      }
+      const user = await User.registerUser(
+        username,
+        bcrypt.hashSync(password, 10),
+        type_user_id
+      );
+      const airline = await User.registerAirline(
+        airlineName,
+        country,
+        user.data.id_user
+      );
+      res.status(201).json({
+        user,
+        airline,
+        message: "successfully created"
+      });
+    } catch (err) {
+      res.status(503).json({
+        message: "Ya existe el usuario",
+        err
+      });
+    }
+  } else {
+    res.status(403).json({
+      message: "Prohibido el acceso a esta funcionalidad"
+    });
+  }
+});
+
 router.post("/signup", (req, res) => {
   db.oneOrNone(query.getUser, [req.body.username])
     .then(data => {

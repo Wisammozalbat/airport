@@ -1,5 +1,5 @@
-const db = require("./../helpers/db.js");
-const query = require("./../helpers/queries").default;
+const db = require("./../helpers/db");
+const query = require("./../helpers/queries");
 
 module.exports.newFlight = async (
   DEP_GATE,
@@ -7,17 +7,20 @@ module.exports.newFlight = async (
   DEPARTURE_TIME,
   ARRIVAL_TIME,
   ID_AIRPORT_DEPARTURE,
-  ID_AIRPORT_ARRIVAL
+  ID_AIRPORT_ARRIVAL,
+  STATUS
 ) => {
   try {
-    const data = await db.none(query.newFlight, [
+    const data = await db.one(query.newFlight, [
       DEP_GATE,
       DAY,
       DEPARTURE_TIME,
       ARRIVAL_TIME,
       ID_AIRPORT_DEPARTURE,
-      ID_AIRPORT_ARRIVAL
+      ID_AIRPORT_ARRIVAL,
+      STATUS
     ]);
+    console.log("vuelo creado ", data);
     return { status: 201, msg: "created", data };
   } catch (e) {
     return {
@@ -34,18 +37,30 @@ module.exports.updateFlight = async (
   DEPARTURE_TIME,
   ARRIVAL_TIME,
   ID_AIRPORT_DEPARTURE,
-  ID_AIRPORT_ARRIVAL
+  ID_AIRPORT_ARRIVAL,
+  STATUS,
+  flightId,
+  description,
+  airline_flight_id
 ) => {
   try {
-    const data = await db.none(query.updateFlight, [
+    const data = await db.one(query.updateFlight, [
       DEP_GATE,
       DAY,
       DEPARTURE_TIME,
       ARRIVAL_TIME,
       ID_AIRPORT_DEPARTURE,
-      ID_AIRPORT_ARRIVAL
+      ID_AIRPORT_ARRIVAL,
+      STATUS,
+      flightId
     ]);
-    return { status: 201, msg: "created", data };
+    console.log(data);
+    const airline_flight = await db.one(query.updateAirlineFlight, [
+      description,
+      airline_flight_id
+    ]);
+    console.log(airline_flight);
+    return { status: 201, msg: "created", data, airline_flight };
   } catch (e) {
     return {
       error: e,

@@ -1,5 +1,5 @@
 const db = require("./../helpers/db.js");
-const query = require("./../helpers/queries").default;
+const query = require("./../helpers/queries");
 
 module.exports.newClient = async (
   name,
@@ -9,7 +9,7 @@ module.exports.newClient = async (
   userId
 ) => {
   try {
-    const data = await db.none(query.newClient, [
+    const data = await db.one(query.newClient, [
       name,
       lastname,
       birthday,
@@ -26,7 +26,20 @@ module.exports.newClient = async (
   }
 };
 
-module.exports.getClients = async userId => {
+module.exports.deleteClient = async passport => {
+  try {
+    const data = await db.one(query.deleteClient, [passport]);
+    return { status: 201, msg: "client deleted", data };
+  } catch (e) {
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
+  }
+};
+
+module.exports.getClient = async userId => {
   try {
     const data = await db.any(query.getClient, [userId]);
     return { status: 200, msg: "get client", data };

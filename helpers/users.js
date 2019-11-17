@@ -26,6 +26,17 @@ module.exports.getUserByUsername = username => {
   });
 };
 
+module.exports.getAllUsers = () => {
+  try {
+    const allUsers = db.any(sql.getAllUser);
+    return allUsers;
+  } catch (e) {
+    res.status(500).json({
+      message: "unable to access"
+    });
+  }
+};
+
 module.exports.comparePassword = (candidatePassword, hash) => {
   return new Promise((res, rej) => {
     bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
@@ -35,15 +46,25 @@ module.exports.comparePassword = (candidatePassword, hash) => {
   });
 };
 
+module.exports.registerAirline = (airline, country, userId) => {
+  try {
+    const newAirline = db.one(sql.newAirline, [airline, country, userId]);
+    return newAirline.data;
+  } catch (e) {
+    return e;
+  }
+};
+
 module.exports.registerUser = (username, password, type) => {
   return new Promise((res, rej) => {
     db.connect().then(obj => {
       obj
-        .none(sql.newUser, [username, type, password])
-        .then(() => {
+        .one(sql.newUser, [username, type, password])
+        .then(data => {
           res({
             message: "OK",
-            status: 200
+            status: 200,
+            data
           });
           obj.done();
         })
@@ -57,4 +78,13 @@ module.exports.registerUser = (username, password, type) => {
         });
     });
   });
+};
+
+module.exports.deleteUser = username => {
+  try {
+    const user = db.none(sql.deleteUser, [username]);
+    return user.data;
+  } catch (e) {
+    return e;
+  }
 };
