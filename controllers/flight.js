@@ -198,24 +198,24 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
 });
 
 //esta esta pendiente
-router.get("/:flightId/:userId", auth, async (req, res) => {
-  const { flightId, userId } = req.params;
+router.get("/:flightId/reserve", auth, async (req, res) => {
+  const { flightId } = req.params;
+  const userId = req.user.id_user;
   try {
     let clients = await Client.getClient(userId);
-    console.log("clients: ", clients);
     let tickets = [];
     for (let i of clients.data) {
-      console.log(i);
-      const clientId = i.id_user;
-      let ticket = await Ticket.getTicket(flightId, clientId);
-      if (ticket !== null) {
-        console.log("ticket available: ", i);
-        tickets.push(ticket);
+      let ticket = await Ticket.getTicket(flightId, i.id_client);
+      if (ticket.data !== null) {
+        newTicket = ticket.data;
+        console.log(newTicket);
+        tickets.push(newTicket);
       }
     }
     console.log(tickets);
     tickets = tickets.sort(compare);
-    res.status(200).json({ data: tickets });
+    console.log(tickets);
+    res.status(200).json({ ...tickets });
   } catch (e) {
     res.status(403).send({ ...e });
   }
@@ -223,10 +223,10 @@ router.get("/:flightId/:userId", auth, async (req, res) => {
 });
 
 function compare(a, b) {
-  if (a.id_flight < b.id_flight) {
+  if (a.id_ticket < b.id_ticket) {
     return -1;
   }
-  if (a.id_flight > b.id_flight) {
+  if (a.id_ticket > b.id_ticket) {
     return 1;
   }
   return 0;
