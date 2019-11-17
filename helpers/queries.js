@@ -45,7 +45,8 @@ let queries = {
   }),
   newTicket: new PS({
     name: "new-ticket",
-    text: "INSERT INTO TICKET (ID_FLIGHT, ID_CLIENT) VALUES ($1, $2)"
+    text:
+      "INSERT INTO TICKET (ID_FLIGHT, ID_CLIENT) VALUES ($1, $2) RETURNING *"
   }),
   getClient: new PS({
     name: "get-client",

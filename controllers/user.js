@@ -10,7 +10,7 @@ router.get("/", auth, async (req, res) => {
     const users = await Users.getAllUsers();
     console.log(users);
     res.status(200).json({
-      message: "users  fafaf",
+      message: "users: ",
       data: users
     });
   } else {

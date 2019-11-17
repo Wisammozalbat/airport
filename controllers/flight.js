@@ -34,9 +34,6 @@ router.post("/", auth, async (req, res) => {
       STATUS
     } = req.body;
     try {
-      const flight = await db.oneOrNone(
-        "Select * from flight where id_flight = 2"
-      );
       const data = await Flight.newFlight(
         DEP_GATE,
         DAY,
@@ -49,14 +46,13 @@ router.post("/", auth, async (req, res) => {
       const airline = await db.one(query.getAirlineByUserId, [
         req.user.id_user
       ]);
-      console.log(query.newAirlineFlight);
       const newFlight = await db.one(query.newAirlineFlight, [
         description,
         airline.id_airline,
         data.data.id_flight
       ]);
       console.log("new flight ", newFlight);
-      res.status(201).send({ ...data, newFlight });
+      res.status(201).send({ ...data.data, newFlight });
     } catch (e) {
       res.status(403).send({ ...e });
     }
@@ -140,8 +136,8 @@ router.put("/:flightId", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    let vuelo = await db.any(query.getFlight, [req.params.id]);
-    res.status(200).json({ ...vuelo });
+    let vuelo = await db.one(query.getFlight, [req.params.id]);
+    res.status(200).json({ vuelo });
   } catch (e) {
     res.status(403).send({ ...e });
   }
@@ -162,6 +158,13 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
   } = req.body;
   const { flightId } = req.params;
   try {
+    const data = await Ticket.getTicket(flightId, clientId);
+    if (data.data !== null) {
+      res
+        .status(409)
+        .json({ message: "Este cliente ya posee pasaje para este vuelo" });
+      return;
+    }
     const pago = await Instapago.payTicket(
       amount,
       description,
@@ -173,14 +176,8 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
       statusid,
       ip
     );
-    if (pago.success) {
-      const data = await Ticket.getTicket(flightId, clientId);
-      if (data !== null) {
-        res
-          .status(409)
-          .json({ message: "Este cliente ya posee pasaje para este vuelo" });
-        return;
-      }
+    console.log(pago);
+    if (pago.data.success) {
       if (req.user.type_user_id !== 3) {
         const data = await Ticket.newTicket(flightId, clientId);
         res.status(201).send({ ...data });
@@ -200,16 +197,23 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
   }
 });
 
+//esta esta pendiente
 router.get("/:flightId/:userId", auth, async (req, res) => {
   const { flightId, userId } = req.params;
   try {
     let clients = await Client.getClient(userId);
+    console.log("clients: ", clients);
     let tickets = [];
-    for (let i of clients) {
+    for (let i of clients.data) {
+      console.log(i);
       const clientId = i.id_user;
       let ticket = await Ticket.getTicket(flightId, clientId);
-      tickets.push(ticket.data);
+      if (ticket !== null) {
+        console.log("ticket available: ", i);
+        tickets.push(ticket);
+      }
     }
+    console.log(tickets);
     tickets = tickets.sort(compare);
     res.status(200).json({ data: tickets });
   } catch (e) {

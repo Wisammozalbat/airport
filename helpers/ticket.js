@@ -1,9 +1,9 @@
 const db = require("./../helpers/db.js");
-const query = require("./../helpers/queries").default;
+const query = require("./../helpers/queries");
 
 module.exports.newTicket = async (flightId, clientId) => {
   try {
-    const data = await db.none(query.newTicket, [flightId, clientId]);
+    const data = await db.one(query.newTicket, [flightId, clientId]);
     return { status: 201, msg: "created", data };
   } catch (e) {
     return {

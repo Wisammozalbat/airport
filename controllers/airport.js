@@ -42,4 +42,14 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+//actualizar los datos del aeropuert
+router.put("/", auth, async (req, res) => {
+  res.send("update airport");
+});
+
+//borrar los datos del aeropuerto
+router.delete("/", auth, async (req, res) => {
+  res.send("delete airport");
+});
+
 module.exports = router;

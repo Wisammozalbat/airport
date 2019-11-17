@@ -14,7 +14,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   if (req.user.type_user_id !== 3) {
     const { name, lastname, birthday, passport } = req.body;
     const data = await db.oneOrNone(query.getClientByPassport, [passport]);
@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/", auth, async (req, res) => {
   if (req.user.type_user_id !== 3) {
     const { passport } = req.body;
     const data = await db.oneOrNone(query.getClientByPassport, [passport]);
@@ -64,6 +64,11 @@ router.delete("/", async (req, res) => {
       status: "401"
     });
   }
+});
+
+//crear update para clientes
+router.put("/", auth, async (req, res) => {
+  res.send("update client");
 });
 
 module.exports = router;
