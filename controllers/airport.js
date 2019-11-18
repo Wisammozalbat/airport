@@ -5,7 +5,8 @@ const Airport = require("./../helpers/airport");
 
 router.get("/", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
-    const airports = await Airport.getAllAirports();
+    let airports = await Airport.getAllAirports();
+    airports = airports.sort(compare);
     console.log(airports);
     res.status(200).json({
       message: "airports",
@@ -43,13 +44,41 @@ router.post("/", auth, async (req, res) => {
 });
 
 //actualizar los datos del aeropuert
-router.put("/", auth, async (req, res) => {
-  res.send("update airport");
+router.put("/:airportId", auth, async (req, res) => {
+  if (req.user.type_user_id === 2) {
+    const { airportId } = req.params;
+    const { name, country } = req.body;
+    try {
+      const airport = await Airport.getAirportById(airportId);
+      if (airport.data === null) {
+        res.status(503).json({ message: "no existe" });
+        return;
+      }
+      const data = await Airport.updateAirport(name, country, airportId);
+      console.log(data);
+      res.status(201).send({ ...data });
+    } catch (e) {
+      res.status(403).send({ ...e });
+    }
+  } else {
+    res.status(401).json({
+      message: "Forbidden action for user",
+      status: "401"
+    });
+  }
 });
 
 //borrar los datos del aeropuerto
-router.delete("/", auth, async (req, res) => {
-  res.send("delete airport");
-});
+router.delete("/", auth, async (req, res) => {});
+
+function compare(a, b) {
+  if (a.id_airport < b.id_airport) {
+    return -1;
+  }
+  if (a.id_airport > b.id_airport) {
+    return 1;
+  }
+  return 0;
+}
 
 module.exports = router;

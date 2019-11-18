@@ -14,9 +14,36 @@ module.exports.newAirport = async (name, country) => {
   }
 };
 
+module.exports.updateAirport = async (name, country, id_airport) => {
+  try {
+    const data = await db.one(query.updateAirport, [name, country, id_airport]);
+    return { status: 200, msg: "airport updated", data };
+  } catch (e) {
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
+  }
+};
+
 module.exports.getAirport = async name => {
   try {
     const data = await db.oneOrNone(query.getAirport, [name]);
+    console.log(data);
+    return { status: 201, msg: "airport gotted", data };
+  } catch (e) {
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
+  }
+};
+
+module.exports.getAirportById = async airportId => {
+  try {
+    const data = await db.oneOrNone(query.getAirportById, [airportId]);
     console.log(data);
     return { status: 201, msg: "airport gotted", data };
   } catch (e) {

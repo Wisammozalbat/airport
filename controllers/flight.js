@@ -215,7 +215,7 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
     console.log(tickets);
     tickets = tickets.sort(compare);
     console.log(tickets);
-    res.status(200).json({ ...tickets });
+    res.status(200).json({ tickets });
   } catch (e) {
     res.status(403).send({ ...e });
   }
