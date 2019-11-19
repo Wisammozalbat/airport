@@ -1,0 +1,151 @@
+
+CREATE SEQUENCE public.users_id_user_seq;
+
+CREATE TABLE public.users (
+                id_user INTEGER NOT NULL DEFAULT nextval('public.users_id_user_seq'),
+                username VARCHAR NOT NULL,
+                type_user_id INTEGER NOT NULL,
+                password VARCHAR NOT NULL,
+                CONSTRAINT users_pk PRIMARY KEY (id_user)
+);
+
+
+ALTER SEQUENCE public.users_id_user_seq OWNED BY public.users.id_user;
+
+CREATE SEQUENCE public.client_id_client_seq_1;
+
+CREATE TABLE public.client (
+                id_client INTEGER NOT NULL DEFAULT nextval('public.client_id_client_seq_1'),
+                name VARCHAR NOT NULL,
+                lastname VARCHAR NOT NULL,
+                birthday DATE NOT NULL,
+                passport VARCHAR NOT NULL,
+                id_user INTEGER NOT NULL,
+                CONSTRAINT client_pk PRIMARY KEY (id_client)
+);
+
+
+ALTER SEQUENCE public.client_id_client_seq_1 OWNED BY public.client.id_client;
+
+CREATE SEQUENCE public.airport_id_airport_seq;
+
+CREATE TABLE public.airport (
+                id_airport INTEGER NOT NULL DEFAULT nextval('public.airport_id_airport_seq'),
+                name VARCHAR NOT NULL,
+                country VARCHAR NOT NULL,
+                CONSTRAINT airport_pk PRIMARY KEY (id_airport)
+);
+
+
+ALTER SEQUENCE public.airport_id_airport_seq OWNED BY public.airport.id_airport;
+
+CREATE SEQUENCE public.flight_id_flight_seq_1;
+
+CREATE TABLE public.flight (
+                id_flight INTEGER NOT NULL DEFAULT nextval('public.flight_id_flight_seq_1'),
+                dep_gate VARCHAR NOT NULL,
+                day DATE NOT NULL,
+                departure_time TIMESTAMP NOT NULL,
+                arrival_time TIMESTAMP NOT NULL,
+                id_airport_departure INTEGER NOT NULL,
+                id_airport_arrival INTEGER NOT NULL,
+                status VARCHAR NOT NULL,
+                CONSTRAINT flight_pk PRIMARY KEY (id_flight)
+);
+
+
+ALTER SEQUENCE public.flight_id_flight_seq_1 OWNED BY public.flight.id_flight;
+
+CREATE SEQUENCE public.ticket_id_ticket_seq;
+
+CREATE TABLE public.ticket (
+                id_ticket INTEGER NOT NULL DEFAULT nextval('public.ticket_id_ticket_seq'),
+                id_flight INTEGER NOT NULL,
+                id_client INTEGER NOT NULL,
+                CONSTRAINT ticket_id PRIMARY KEY (id_ticket)
+);
+
+
+ALTER SEQUENCE public.ticket_id_ticket_seq OWNED BY public.ticket.id_ticket;
+
+CREATE SEQUENCE public.airline_id_airline_seq;
+
+CREATE TABLE public.airline (
+                id_airline INTEGER NOT NULL DEFAULT nextval('public.airline_id_airline_seq'),
+                name VARCHAR NOT NULL,
+                country VARCHAR NOT NULL,
+                id_user INTEGER NOT NULL,
+                CONSTRAINT airline_pk PRIMARY KEY (id_airline)
+);
+
+
+ALTER SEQUENCE public.airline_id_airline_seq OWNED BY public.airline.id_airline;
+
+CREATE SEQUENCE public.airline_flight_airline_flight_id_seq;
+
+CREATE TABLE public.airline_flight (
+                airline_flight_id INTEGER NOT NULL DEFAULT nextval('public.airline_flight_airline_flight_id_seq'),
+                description VARCHAR NOT NULL,
+                id_airline INTEGER NOT NULL,
+                id_flight INTEGER NOT NULL,
+                CONSTRAINT airline_flight_pk PRIMARY KEY (airline_flight_id)
+);
+
+
+ALTER SEQUENCE public.airline_flight_airline_flight_id_seq OWNED BY public.airline_flight.airline_flight_id;
+
+ALTER TABLE public.client ADD CONSTRAINT users_client_fk
+FOREIGN KEY (id_user)
+REFERENCES public.users (id_user)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.airline ADD CONSTRAINT users_airline_fk
+FOREIGN KEY (id_user)
+REFERENCES public.users (id_user)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.ticket ADD CONSTRAINT client_order_fk
+FOREIGN KEY (id_client)
+REFERENCES public.client (id_client)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.flight ADD CONSTRAINT airport_flight_fk
+FOREIGN KEY (id_airport_departure)
+REFERENCES public.airport (id_airport)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.flight ADD CONSTRAINT airport_flight_fk1
+FOREIGN KEY (id_airport_arrival)
+REFERENCES public.airport (id_airport)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.ticket ADD CONSTRAINT flight_order_fk
+FOREIGN KEY (id_flight)
+REFERENCES public.flight (id_flight)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.airline_flight ADD CONSTRAINT flight_airline_flight_fk
+FOREIGN KEY (id_flight)
+REFERENCES public.flight (id_flight)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;
+
+ALTER TABLE public.airline_flight ADD CONSTRAINT airline_airline_flight_fk
+FOREIGN KEY (id_airline)
+REFERENCES public.airline (id_airline)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+NOT DEFERRABLE;

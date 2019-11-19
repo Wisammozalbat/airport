@@ -1,5 +1,4 @@
 const express = require("express");
-// let session = require("express-session");
 const app = express();
 const jwt = require("express-jwt");
 const config = require("./helpers/config");
@@ -16,7 +15,7 @@ app.use(
   jwt({
     secret: config.secret
   }).unless({
-    path: ["/login", "/signup", "/", "/flights", "/flights/:id"]
+    path: ["/login", "/signup", "/", "/flights", "/airports", "/clients"]
   })
 );
 app.use(passport.initialize());

@@ -1,7 +1,6 @@
 const db = require("./db");
 const bcrypt = require("bcryptjs");
 const sql = require("./queries.js");
-const config = require("./config.js");
 
 module.exports.getUserByUsername = username => {
   return new Promise((res, rej) => {

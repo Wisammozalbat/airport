@@ -205,7 +205,7 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
     let tickets = [];
     for (let i of clients.data) {
       let ticket = await Ticket.getTicket(flightId, i.id_client);
-      if (ticket.data.length >= 1) {
+      if (ticket.data.length >= 1 || ticket.data === null) {
         newTicket = ticket.data;
         console.log(newTicket);
         tickets.push(newTicket);
