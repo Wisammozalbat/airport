@@ -100,6 +100,10 @@ let queries = {
     name: "get-airport",
     text: "SELECT * FROM AIRPORT WHERE NAME = $1"
   }),
+  getAirportById: new PS({
+    name: "get-airport-by-id",
+    text: "SELECT * FROM AIRPORT WHERE ID_AIRPORT = $1"
+  }),
   getAllAirports: new PS({
     name: "get-all-airports",
     text: "SELECT * FROM AIRPORT"
@@ -109,9 +113,9 @@ let queries = {
     text:
       "UPDATE AIRPORT SET NAME = $1, COUNTRY = $2 WHERE ID_AIRPORT = $3 RETURNING *"
   }),
-  getAirportById: new PS({
-    name: "get-airport-by-id",
-    text: "SELECT * FROM AIRPORT WHERE ID_AIRPORT = $1"
+  deleteAirport: new PS({
+    name: "delete-airport",
+    text: "DELETE FROM AIRPORT WHERE ID_AIRPORT = $1"
   })
 };
 

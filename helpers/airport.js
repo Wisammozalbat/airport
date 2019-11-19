@@ -64,3 +64,16 @@ module.exports.getAllAirports = async () => {
     return e;
   }
 };
+
+module.exports.deleteAirport = async id_airport => {
+  try {
+    const data = await db.one(query.deleteAirport, [id_airport]);
+    return { status: 201, msg: "airport deleted", data };
+  } catch (e) {
+    return {
+      error: e,
+      status: 501,
+      msg: "Failed at connecting to the data base"
+    };
+  }
+};

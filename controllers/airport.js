@@ -43,7 +43,6 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-//actualizar los datos del aeropuert
 router.put("/:airportId", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
     const { airportId } = req.params;
