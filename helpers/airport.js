@@ -67,7 +67,7 @@ module.exports.getAllAirports = async () => {
 
 module.exports.deleteAirport = async id_airport => {
   try {
-    const data = await db.one(query.deleteAirport, [id_airport]);
+    const data = await db.none(query.deleteAirport, [id_airport]);
     return { status: 201, msg: "airport deleted", data };
   } catch (e) {
     return {

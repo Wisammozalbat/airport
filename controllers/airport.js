@@ -2,6 +2,8 @@ const express = require("express");
 const auth = require("./../middlewares/jwtAuth");
 let router = express.Router();
 const Airport = require("./../helpers/airport");
+const db = require("./../helpers/db.js");
+const query = require("./../helpers/queries");
 
 router.get("/", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
@@ -68,7 +70,28 @@ router.put("/:airportId", auth, async (req, res) => {
 });
 
 //borrar los datos del aeropuerto
-router.delete("/", auth, async (req, res) => {});
+router.delete("/", auth, async (req, res) => {
+  if (req.user.type_user_id === 2) {
+    const { id_airport } = req.body;
+    const data = await db.oneOrNone(query.getAirportById, [id_airport]);
+    console.log(data);
+    if (data === null) {
+      res.status(503).json({ message: "airport no existe" });
+      return;
+    }
+    try {
+      const data = await Airport.deleteAirport(id_airport);
+      res.status(201).send({ ...data });
+    } catch (e) {
+      res.status(403).send({ ...e });
+    }
+  } else {
+    res.status(401).json({
+      message: "Forbidden action for user",
+      status: "401"
+    });
+  }
+});
 
 function compare(a, b) {
   if (a.id_airport < b.id_airport) {
