@@ -197,7 +197,6 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
   }
 });
 
-//esta esta pendiente
 router.get("/:flightId/reserve", auth, async (req, res) => {
   const { flightId } = req.params;
   const userId = req.user.id_user;
@@ -206,7 +205,7 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
     let tickets = [];
     for (let i of clients.data) {
       let ticket = await Ticket.getTicket(flightId, i.id_client);
-      if (ticket.data !== null) {
+      if (ticket.data.length >= 1) {
         newTicket = ticket.data;
         console.log(newTicket);
         tickets.push(newTicket);

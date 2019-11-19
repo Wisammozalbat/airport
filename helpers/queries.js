@@ -41,7 +41,8 @@ let queries = {
   }),
   getTicket: new PS({
     name: "get-ticket",
-    text: "SELECT * FROM TICKET WHERE ID_FLIGHT = $1 AND ID_CLIENT = $2"
+    text:
+      "SELECT * FROM TICKET JOIN FLIGHT ON TICKET.ID_FLIGHT = FLIGHT.ID_FLIGHT JOIN CLIENT ON TICKET.ID_CLIENT = CLIENT.ID_CLIENT WHERE TICKET.ID_FLIGHT = $1 AND TICKET.ID_CLIENT = $2"
   }),
   newTicket: new PS({
     name: "new-ticket",
@@ -61,6 +62,11 @@ let queries = {
     text:
       "INSERT INTO CLIENT (NAME, LASTNAME, BIRTHDAY, PASSPORT, ID_USER) VALUES ($1, $2, $3, $4, $5) RETURNING *"
   }),
+  // updateClient: new PS({
+  //   name: "update-client",
+  //   text:
+  //     "UPDATE CLIENT SET NAME = $1, LASTNAME = $2, BIRTHDAY = $3, PASSPORT = $4 WHERE ID_CLIENT = $5 RETURNING *"
+  // }),
   deleteClient: new PS({
     name: "delete-client",
     text: "DELETE FROM CLIENT WHERE PASSPORT = $1"

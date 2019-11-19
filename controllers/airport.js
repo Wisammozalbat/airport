@@ -69,7 +69,6 @@ router.put("/:airportId", auth, async (req, res) => {
   }
 });
 
-//borrar los datos del aeropuerto
 router.delete("/", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
     const { id_airport } = req.body;

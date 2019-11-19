@@ -16,7 +16,7 @@ module.exports.newTicket = async (flightId, clientId) => {
 
 module.exports.getTicket = async (flightId, clientId) => {
   try {
-    const data = await db.oneOrNone(query.getTicket, [flightId, clientId]);
+    const data = await db.manyOrNone(query.getTicket, [flightId, clientId]);
     return { status: 200, msg: "created", data };
   } catch (e) {
     return {
