@@ -1,7 +1,8 @@
 var pdf = require("html-pdf");
 
 module.exports.createPDF = (id, content) => {
-  pdf.create(content).toFile(`./public/pdfs/${id}.pdf`, function(err, res) {
+  let contenido = `${content}`;
+  pdf.create(contenido).toFile(`./public/pdfs/${id}.pdf`, function(err, res) {
     if (err) {
       console.log(err);
       return false;
