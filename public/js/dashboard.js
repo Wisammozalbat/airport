@@ -24,7 +24,7 @@ let getFlights = () => {
             <td>${element.departure_airport}</td>
             <td>${element.arrival_airport}</td>
             <td>${element.airline_name}</td>
-            <td><button class="btnShowMore" onClick="showDetails(${element.id_flight})">ver mas</button></td>
+            <td><a class="btnShowMore" onClick="showDetails(${element.id_flight})">ver mas</a></td>
         </tr>`;
       });
     });
