@@ -7,5 +7,6 @@ router.use("/flights", require("./flight"));
 router.use("/clients", require("./client"));
 router.use("/airports", require("./airport"));
 router.use("/users", require("./user"));
+router.use("/airlines", require("./airline"));
 
 module.exports = router;

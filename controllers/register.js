@@ -2,6 +2,7 @@ const express = require("express");
 let router = express.Router();
 let bcrypt = require("bcryptjs");
 const User = require("./../helpers/users");
+const Airline = require("./../helpers/airline");
 const db = require("./../helpers/db");
 const query = require("./../helpers/queries");
 
@@ -25,7 +26,7 @@ router.post("/signupAirline", auth, async (req, res) => {
         bcrypt.hashSync(password, 10),
         type_user_id
       );
-      const airline = await User.registerAirline(
+      const airline = await Airline.newAirline(
         airlineName,
         country,
         user.data.id_user

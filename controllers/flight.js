@@ -6,15 +6,17 @@ const query = require("./../helpers/queries");
 const Flight = require("./../helpers/flight");
 const Ticket = require("./../helpers/ticket");
 const Client = require("./../helpers/client");
+const PDF = require("./../controllers/pdftest.js");
 const Instapago = require("./../helpers/instapago");
 
 router.get("/", async (req, res) => {
   try {
-    let vuelos = await db.any(query.getFlights);
+    let vuelos = await db.any(query.getAllAirlineFlights);
     if (vuelos.length === 0) {
       res.status(203).send({ msg: "vuelos no disponibles" });
       return;
     }
+    console.log(vuelos);
     res.status(200).json(vuelos);
   } catch (e) {
     res.status(500).send(e);
@@ -136,8 +138,8 @@ router.put("/:flightId", auth, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    let vuelo = await db.one(query.getFlight, [req.params.id]);
-    res.status(200).json({ vuelo });
+    let vuelo = await db.one(query.getFlightData, [req.params.id]);
+    res.status(200).json({ message: "Vuelo traido", status: 200, vuelo });
   } catch (e) {
     res.status(403).send({ ...e });
   }
@@ -201,17 +203,13 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
   const { flightId } = req.params;
   const userId = req.user.id_user;
   try {
-    let clients = await Client.getClient(userId);
-    let tickets = [];
-    for (let i of clients.data) {
-      let ticket = await Ticket.getTicket(flightId, i.id_client);
-      if (ticket.data.length >= 1 || ticket.data === null) {
-        newTicket = ticket.data;
-        console.log(newTicket);
-        tickets.push(newTicket);
-      }
-    }
+    // let clients = await Client.getClient(userId);
+    let tickets = await db.any(query.getTicketData, [flightId, userId]);
     console.log(tickets);
+    if (tickets === null) {
+      res.send("no hay tickets de este usuario para este vuelo");
+    }
+
     tickets = tickets.sort(compare);
     console.log(tickets);
     res.status(200).json({ tickets });
@@ -219,6 +217,16 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
     res.status(403).send({ ...e });
   }
   res.send();
+});
+
+router.post("/:flightId/reserve/download", auth, async (req, res) => {
+  const { flightId } = req.params;
+  const { content, type } = req.body;
+  console.log(content);
+  console.log("pdf");
+  const pdf = await PDF.createPDF(flightId, content);
+  console.log(pdf);
+  res.send({ status: 200 });
 });
 
 function compare(a, b) {

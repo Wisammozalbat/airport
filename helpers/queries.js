@@ -30,6 +30,20 @@ let queries = {
     name: "get-flight",
     text: "SELECT * FROM FLIGHT WHERE ID_FLIGHT=$1"
   }),
+  getFlightData: new PS({
+    name: "get-flight-data",
+    text: `SELECT a.description, a.id_airline, a.id_flight, 
+          f.day, f.status, f.id_flight, f.departure_time, f.arrival_time, f.dep_gate,
+          ad.name as Departure_Airport, ad.country as Departure_Airport_country,
+          aa.name as Arrival_airport, aa.country as Arrival_Airport_country,
+          al.name as airline_name, al.airline_country
+          FROM AIRLINE_FLIGHT a 
+          JOIN FLIGHT f ON a.id_flight = f.id_flight
+          JOIN AIRPORT ad ON f.id_airport_departure = ad.id_airport
+          JOIN AIRPORT aa ON f.id_airport_arrival = aa.id_airport
+          JOIN AIRLINE al ON a.id_airline = al.id_airline
+          WHERE a.id_flight = $1`
+  }),
   updateFlight: new PS({
     name: "update-flight",
     text:
@@ -41,8 +55,21 @@ let queries = {
   }),
   getTicket: new PS({
     name: "get-ticket",
-    text:
-      "SELECT * FROM TICKET JOIN FLIGHT ON TICKET.ID_FLIGHT = FLIGHT.ID_FLIGHT JOIN CLIENT ON TICKET.ID_CLIENT = CLIENT.ID_CLIENT WHERE TICKET.ID_FLIGHT = $1 AND TICKET.ID_CLIENT = $2"
+    text: "SELECT * FROM TICKET WHERE ID_FLIGHT = $1 AND ID_CLIENT = $2"
+  }),
+  getTicketData: new PS({
+    name: "get-ticket-data",
+    text: `SELECT t.id_ticket, t.id_flight, t.id_client,
+        c.name, c.lastname, c.passport, c.birthday,
+        f.dep_gate, f.day, f.departure_time, f.arrival_time,
+        ad.name as Departure_Airport, ad.country as Departure_Airport_country,
+        aa.name as Arrival_airport, aa.country as Arrival_Airport_country
+        FROM TICKET t
+        JOIN CLIENT c ON t.id_client = c.id_client
+        JOIN FLIGHT f ON t.id_flight = f.id_flight
+        JOIN AIRPORT ad ON f.id_airport_departure = ad.id_airport
+        JOIN AIRPORT aa ON f.id_airport_arrival = aa.id_airport
+        WHERE t.id_flight = $1 and c.id_user = $2`
   }),
   newTicket: new PS({
     name: "new-ticket",
@@ -71,10 +98,15 @@ let queries = {
     name: "delete-client",
     text: "DELETE FROM CLIENT WHERE PASSPORT = $1"
   }),
+  ///////////////////////////////////////////////////////////////////////////////////////////////
   newAirline: new PS({
     name: "new-airline",
     text:
       "INSERT INTO AIRLINE (NAME, COUNTRY, ID_USER) VALUES ($1, $2, $3) RETURNING *"
+  }),
+  getAllAirlines: new PS({
+    name: "get-all-airlines",
+    text: "SELECT * FROM AIRLINE"
   }),
   getAirline: new PS({
     name: "get-airline",
@@ -84,10 +116,33 @@ let queries = {
     name: "get-airline-by-user-id",
     text: "SELECT * FROM AIRLINE WHERE ID_USER = $1"
   }),
+  updateAirline: new PS({
+    name: "update-airline",
+    text:
+      "UPDATE AIRLINE SET NAME = $1, COUNTRY = $2 WHERE ID_AIRLINE = $3 RETURNING *"
+  }),
+  deleteAirline: new PS({
+    name: "delete-airline",
+    text: "DELETE FROM AIRLINE WHERE ID_AIRLINE = $1"
+  }),
+  ///////////////////////////////////////////////////////////////////////////////////////
   newAirlineFlight: new PS({
     name: "new-airline-flight",
     text:
       "INSERT INTO AIRLINE_FLIGHT (DESCRIPTION, ID_AIRLINE, ID_FLIGHT) VALUES ($1, $2, $3) RETURNING *"
+  }),
+  getAllAirlineFlights: new PS({
+    name: "get-all-airline-flight",
+    text: `SELECT a.description, a.id_airline, a.id_flight, 
+    f.day, f.status, f.id_flight,
+    ad.name as Departure_Airport, 
+    aa.name as Arrival_airport,
+    al.name as airline_name, al.airline_country
+    FROM AIRLINE_FLIGHT a 
+    JOIN FLIGHT f ON a.id_flight = f.id_flight
+    JOIN AIRPORT ad ON f.id_airport_departure = ad.id_airport
+    JOIN AIRPORT aa ON f.id_airport_arrival = aa.id_airport
+    JOIN AIRLINE al ON a.id_airline = al.id_airline`
   }),
   getAirlineFlight: new PS({
     name: "get-airline-flight",

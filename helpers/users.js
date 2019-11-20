@@ -45,15 +45,6 @@ module.exports.comparePassword = (candidatePassword, hash) => {
   });
 };
 
-module.exports.registerAirline = (airline, country, userId) => {
-  try {
-    const newAirline = db.one(sql.newAirline, [airline, country, userId]);
-    return newAirline.data;
-  } catch (e) {
-    return e;
-  }
-};
-
 module.exports.registerUser = (username, password, type) => {
   return new Promise((res, rej) => {
     db.connect().then(obj => {
