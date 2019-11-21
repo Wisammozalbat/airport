@@ -2,6 +2,14 @@ function $(id) {
   return document.getElementById(id);
 }
 
+if (localStorage.getItem("token")) {
+  window.location = "../views/dashboard.html";
+}
+
+$("loginLink").classList.remove("hide");
+$("registerLink").classList.remove("hide");
+$("logoutLink").classList.add("hide");
+
 let login = () => {
   console.log(12);
   body = {
@@ -21,7 +29,6 @@ let login = () => {
         localStorage.setItem("user", JSON.stringify(res.user));
         switch (res.user.type) {
           case 1:
-            window.location = "../views/dashboard.html";
             break;
           case 2:
             window.location = "../views/dashboard.html";

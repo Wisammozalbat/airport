@@ -9,29 +9,56 @@
     <link rel="stylesheet" href="../css/global.css" />
     <script src="../js/materialize.min.js"></script>
     <title>Document</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 70%;
+        width: 80%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <nav>
       <div class="nav-wrapper blue lighten-2">
         <a href="#" class="brand-logo" id="logo">AIRPORT</a>
         <ul id="nav-mobile" class="right">
-          <li><a href="../views/dashboard.html">Dashboard</a></li>
-          <li><a href="../views/login.html">Login</a></li>
+          <li>
+            <a href="../views/dashboard.html" id="dashboardLink">Dashboard</a>
+          </li>
+          <li><a href="../views/login.html" id="loginLink">Login</a></li>
+          <li>
+            <a href="../views/register.html" id="registerLink">Register</a>
+          </li>
+          <li><a href="../views/dashboard.html" id="logoutLink">Logout</a></li>
         </ul>
       </div>
     </nav>
     <div id="dataContainer"></div>
-    <iframe
-      width="600"
-      height="450"
-      frameborder="0"
-      style="border:0"
-      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC1khr8Pt4m_VChIaLXIhrDcOL4f7-P4xU
-    &q=Space+Needle,Seattle+WA"
-      allowfullscreen
-    >
-    </iframe>
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8
+        });
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkBzYywoeYNiy1OK0Swu0nC6551zmZaeQ&callback=initMap"
+      async
+      defer
+    ></script>
     <script src="../js/moment.js"></script>
     <script src="../js/details.js"></script>
+    <script src="../js/logout.js"></script>
   </body>
 </html>

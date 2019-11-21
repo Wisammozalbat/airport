@@ -56,6 +56,10 @@ router.post("/signup", (req, res) => {
         res.status(409).json({ message: "usuario ya existe" });
         return;
       }
+      if (req.body.username === "" || req.user.password === "") {
+        res.status(409).json({ message: "no se aceptan parametros vacios" });
+        return;
+      }
       User.registerUser(
         req.body.username,
         bcrypt.hashSync(req.body.password, 10),
