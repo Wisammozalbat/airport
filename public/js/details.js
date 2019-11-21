@@ -28,6 +28,7 @@ window.onpageshow = () => {
 };
 
 let showData = data => {
+  initMap();
   console.log(data);
   let day = moment(data.day).format("DD/MM/YYYY");
   let depHour = moment(data.departure_time)
@@ -45,6 +46,9 @@ let showData = data => {
     : (duration = duration + " hrs");
   console.log(duration);
   console.log(day);
+
+  let map;
+
   let container = $("dataContainer");
   container.innerHTML = `
   <div class="row details-container">
@@ -67,6 +71,36 @@ let showData = data => {
     <div class="col s12">
       <div class="col s11 offset-s1"><a href="../views/tickets.html?${data.id_flight}">Ver mis pasajes para este vuelo<a></div>
     </div>
-  </div>
-  <div class="details googleMaps"></div>`;
+  </div>`;
+};
+
+let initMap = () => {
+  map = new google.maps.Map($("map"), {
+    center: {
+      lat: parseFloat(data.departure_latiud),
+      lng: parseFloat(data.departure_longitud)
+    },
+    zoom: 2
+  });
+
+  let coords = [
+    {
+      lat: parseFloat(data.departure_latiud),
+      lng: parseFloat(data.departure_longitud)
+    },
+    {
+      lat: parseFloat(data.arrival_latiud),
+      lng: parseFloat(data.arrival_longitud)
+    }
+  ];
+
+  let line = new google.maps.Polyline({
+    path: coords,
+    geodesic: true,
+    strokeColor: "red",
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+
+  line.setMap(map);
 };

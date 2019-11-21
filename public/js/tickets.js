@@ -9,7 +9,6 @@ let downloadTicket = async () => {
   console.log("listo");
   body = {
     content: $("container").innerHTML,
-    type: 2,
     css: `
     <style>
     .ticket-container {border: 1px solid black;}
