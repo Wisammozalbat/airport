@@ -5,8 +5,7 @@ const db = require("./../helpers/db.js");
 const query = require("./../helpers/queries");
 const Flight = require("./../helpers/flight");
 const Ticket = require("./../helpers/ticket");
-const Client = require("./../helpers/client");
-const PDF = require("./../controllers/pdftest.js");
+const PDF = require("./../helpers/pdftest.js");
 const Instapago = require("./../helpers/instapago");
 
 router.get("/", async (req, res) => {
@@ -221,10 +220,10 @@ router.get("/:flightId/reserve", auth, async (req, res) => {
 
 router.post("/:flightId/reserve/download", auth, async (req, res) => {
   const { flightId } = req.params;
-  const { content, type } = req.body;
+  const { content, css } = req.body;
   console.log(content);
   console.log("pdf");
-  const pdf = await PDF.createPDF(flightId, content);
+  const pdf = await PDF.createPDF(flightId, content, css);
   console.log(pdf);
   res.send({ status: 200 });
 });
