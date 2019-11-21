@@ -5,6 +5,15 @@ let x = location.href.split("?")[1];
 
 console.log(x);
 window.onpageshow = () => {
+  if (localStorage.getItem("token")) {
+    $("loginLink").classList.add("hide");
+    $("registerLink").classList.add("hide");
+    $("logoutLink").classList.remove("hide");
+  } else {
+    $("loginLink").classList.remove("hide");
+    $("registerLink").classList.remove("hide");
+    $("logoutLink").classList.add("hide");
+  }
   data = [];
   fetch(`./../flights/${x}`, {
     method: "GET",

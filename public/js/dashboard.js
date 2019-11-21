@@ -7,6 +7,15 @@ let showDetails = id_flight => {
 };
 
 let getFlights = () => {
+  if (localStorage.getItem("token")) {
+    $("loginLink").classList.add("hide");
+    $("registerLink").classList.add("hide");
+    $("logoutLink").classList.remove("hide");
+  } else {
+    $("loginLink").classList.remove("hide");
+    $("registerLink").classList.remove("hide");
+    $("logoutLink").classList.add("hide");
+  }
   console.log(13);
   fetch("./../flights", {
     method: "GET",
@@ -19,7 +28,7 @@ let getFlights = () => {
       console.log(res);
       res.map(element => {
         let date = new Date(element.day).toLocaleDateString();
-        $("tbody").innerHTML += `<tr>
+        $("tbody").innerHTML += `<tr class="tr">
             <td>${date}</td>
             <td>${element.departure_airport}</td>
             <td>${element.arrival_airport}</td>
