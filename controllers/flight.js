@@ -160,7 +160,8 @@ router.post("/:flightId/reserve", auth, async (req, res) => {
   const { flightId } = req.params;
   try {
     const data = await Ticket.getTicket(flightId, clientId);
-    if (data.data !== null) {
+    console.log(data);
+    if (data.data.length >= 1) {
       res
         .status(409)
         .json({ message: "Este cliente ya posee pasaje para este vuelo" });

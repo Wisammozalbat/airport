@@ -28,7 +28,7 @@ window.onpageshow = () => {
 };
 
 let showData = data => {
-  initMap();
+  initMap(data);
   console.log(data);
   let day = moment(data.day).format("DD/MM/YYYY");
   let depHour = moment(data.departure_time)
@@ -73,11 +73,12 @@ let showData = data => {
     </div>
   </div>`;
 };
+let map;
 
-let initMap = () => {
+let initMap = data => {
   map = new google.maps.Map($("map"), {
     center: {
-      lat: parseFloat(data.departure_latiud),
+      lat: parseFloat(data.departure_latitud),
       lng: parseFloat(data.departure_longitud)
     },
     zoom: 2
@@ -85,11 +86,11 @@ let initMap = () => {
 
   let coords = [
     {
-      lat: parseFloat(data.departure_latiud),
+      lat: parseFloat(data.departure_latitud),
       lng: parseFloat(data.departure_longitud)
     },
     {
-      lat: parseFloat(data.arrival_latiud),
+      lat: parseFloat(data.arrival_latitud),
       lng: parseFloat(data.arrival_longitud)
     }
   ];
