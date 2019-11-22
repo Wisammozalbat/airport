@@ -34,8 +34,10 @@ let queries = {
     name: "get-flight-data",
     text: `SELECT a.description, a.id_airline, a.id_flight, 
           f.day, f.status, f.id_flight, f.departure_time, f.arrival_time, f.dep_gate,
-          ad.name as Departure_Airport, ad.country as Departure_Airport_country,
+          ad.name as Departure_Airport, ad.country as Departure_Airport_country, 
+          ad.latitud as departure_latitud, ad.longitud as departure_longitud, 
           aa.name as Arrival_airport, aa.country as Arrival_Airport_country,
+          aa.latitud as arrival_latitud, aa.longitud as arrival_longitud, 
           al.name as airline_name, al.airline_country
           FROM AIRLINE_FLIGHT a 
           JOIN FLIGHT f ON a.id_flight = f.id_flight
@@ -155,7 +157,8 @@ let queries = {
   }),
   newAirport: new PS({
     name: "new-airport",
-    text: "INSERT INTO AIRPORT (NAME, COUNTRY) VALUES ($1, $2) RETURNING *"
+    text:
+      "INSERT INTO AIRPORT (NAME, COUNTRY, LATITUD, LONGITUD) VALUES ($1, $2, $3, $4) RETURNING *"
   }),
   getAirport: new PS({
     name: "get-airport",
@@ -172,7 +175,7 @@ let queries = {
   updateAirport: new PS({
     name: "update-airport",
     text:
-      "UPDATE AIRPORT SET NAME = $1, COUNTRY = $2 WHERE ID_AIRPORT = $3 RETURNING *"
+      "UPDATE AIRPORT SET NAME = $1, COUNTRY = $2, LATITUD = $3, LONGITUD = $4 WHERE ID_AIRPORT = $3 RETURNING *"
   }),
   deleteAirport: new PS({
     name: "delete-airport",

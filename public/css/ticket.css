@@ -1,0 +1,91 @@
+.ticket-container {
+  border: 1px solid black;
+}
+.row {
+  width: 80%;
+  margin: 30px auto;
+  padding: 10px;
+}
+
+span {
+  font-weight: 700;
+}
+
+.download-btn {
+  font-size: 30px;
+  border: 1px solid rgb(17, 219, 101);
+  padding: 10px 30px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: white;
+  background-color: rgb(91, 231, 150);
+  text-shadow: 0 0 2px black;
+  border-radius: 5px;
+}
+
+.download-btn:hover {
+  border: 1px solid rgb(16, 192, 89);
+  background-color: rgb(78, 201, 129);
+}
+.col .row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+.row {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+.col {
+  float: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 0.75rem;
+  min-height: 1px;
+}
+.row .s7 {
+  width: 58.3333333333%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s12 {
+  width: 100%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s3 {
+  width: 25%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s4 {
+  width: 33.3333333333%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s5 {
+  width: 41.6666666667%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s6 {
+  width: 50%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.s7 {
+  width: 58.3333333333%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+.row .col.offset-s1 {
+  margin-left: 8.3333333333%;
+}

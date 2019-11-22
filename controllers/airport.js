@@ -24,14 +24,14 @@ router.get("/", auth, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
-    let { name, country } = req.body;
+    let { name, country, latitud, longitud } = req.body;
     try {
       const airport = await Airport.getAirport(name);
       if (airport.data !== null) {
         res.status(503).json({ message: "ya existe" });
         return;
       }
-      const data = await Airport.newAirport(name, country);
+      const data = await Airport.newAirport(name, country, latitud, longitud);
       console.log(data);
       res.status(201).send({ ...data });
     } catch (e) {
@@ -48,14 +48,20 @@ router.post("/", auth, async (req, res) => {
 router.put("/:airportId", auth, async (req, res) => {
   if (req.user.type_user_id === 2) {
     const { airportId } = req.params;
-    const { name, country } = req.body;
+    const { name, country, latitud, longitud } = req.body;
     try {
       const airport = await Airport.getAirportById(airportId);
       if (airport.data === null) {
         res.status(503).json({ message: "no existe" });
         return;
       }
-      const data = await Airport.updateAirport(name, country, airportId);
+      const data = await Airport.updateAirport(
+        name,
+        country,
+        latitud,
+        longitud,
+        airportId
+      );
       console.log(data);
       res.status(201).send({ ...data });
     } catch (e) {
